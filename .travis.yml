@@ -1,0 +1,24 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t aish2809/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true aish2809/react-test npm test
+
+after_success:
+  - docker build -t aish2809/complexapp-client ./client
+  - docker build -t aish2809/complexapp-nginx ./nginx
+  - docker build -t aish2809/complexapp-server ./server
+  - docker build -t aish2809/complexapp-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push aish2809/complexapp-client
+  - docker push aish2809/complexapp-nginx
+  - docker push aish2809/complexapp-server
+  - docker push aish2809/complexapp-worker
