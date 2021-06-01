@@ -22,3 +22,15 @@ after_success:
   - docker push aish2809/complexapp-nginx
   - docker push aish2809/complexapp-server
   - docker push aish2809/complexapp-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'us-east-1'
+  app: 'multicomplex-app'
+  env: 'Multicomplexapp-env'
+  bucket_name: 'elasticbeanstalk-us-east-1-598054041155'
+  bucket_path: 'multicomplexapp'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
